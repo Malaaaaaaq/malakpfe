@@ -177,7 +177,6 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Start Date & Time */}
                   <div className="form-group datetime-group">
                     <label className="form-label">
                       <span className="label-icon">⏰</span>
@@ -265,7 +264,6 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Search Button */}
                   <div className="form-group search-group">
                     <button type="submit" className="search-btn">
                       <span className="search-icon">🔍</span>
@@ -279,7 +277,7 @@ function App() {
                   </div>
                 </div>
 
-                {/* Quick Filters */}
+          
                 <div className="quick-filters">
                   <span className="filters-label">Popular:</span>
                   <button type="button" className="filter-btn">Airports</button>
@@ -314,10 +312,10 @@ function App() {
         </div>
       </main>
 
-      {/* How It Works Section */}
+      
       <HowItWorks />
 
-      {/* Footer */}
+     
       <footer className="footer">
         <div className="container">
           <div className="footer-content">
