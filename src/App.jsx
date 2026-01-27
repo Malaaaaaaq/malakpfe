@@ -1,6 +1,9 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css';
+import HowItWorks from './HowItWorks.jsx';
+
+
 
 function App() {
   const [location, setLocation] = useState('');
@@ -143,7 +146,7 @@ function App() {
                 </div>
 
                 <div className="form-grid">
-               
+                  {/* Location */}
                   <div className="form-group location-group">
                     <label className="form-label">
                       <span className="label-icon">📍</span>
@@ -310,6 +313,9 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* How It Works Section */}
+      <HowItWorks />
 
       {/* Footer */}
       <footer className="footer">
