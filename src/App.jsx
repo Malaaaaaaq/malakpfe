@@ -1,12 +1,14 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css';
-import HowItWorks from './HowItWorks.jsx';
+import HowItWorks from './components/HowItWorks.jsx';
 import {
   Zap, Menu, X, Search, ClipboardList, HelpCircle,
   User, LogIn, MapPin, Calendar, Clock, ArrowRight,
   Car, Map, Headphones, Star, Sparkles
 } from 'lucide-react';
+import ChooseParkEasy from './chooseParkasy.jsx';
+import Footer from './Footer.jsx';
 
 function App() {
   const [location, setLocation] = useState('');
@@ -310,30 +312,8 @@ function App() {
 
 
       <HowItWorks />
-
-
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-logo">ParLak</div>
-            <div className="footer-links">
-              <a href="#privacy" className="footer-link">Privacy Policy</a>
-              <a href="#terms" className="footer-link">Terms of Service</a>
-              <a href="#contact" className="footer-link">Contact Us</a>
-              <a href="#careers" className="footer-link">Careers</a>
-            </div>
-            <div className="footer-social">
-              <button className="social-btn">f</button>
-              <button className="social-btn">t</button>
-              <button className="social-btn">ig</button>
-              <button className="social-btn">in</button>
-            </div>
-            <div className="footer-copyright">
-              © 2026 Parlak. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
+      <ChooseParkEasy/>
+      <Footer/>
     </div>
   );
 }
