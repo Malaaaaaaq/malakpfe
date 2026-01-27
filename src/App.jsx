@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import './App.css';
 import HowItWorks from './HowItWorks.jsx';
-
-
+import {
+  Zap, Menu, X, Search, ClipboardList, HelpCircle,
+  User, LogIn, MapPin, Calendar, Clock, ArrowRight,
+  Car, Map, Headphones, Star, Sparkles
+} from 'lucide-react';
 
 function App() {
   const [location, setLocation] = useState('');
@@ -24,7 +27,7 @@ function App() {
 
   const handleTimeChange = (type, value) => {
     if (type === 'start')
-       setStartTime(value);
+      setStartTime(value);
     else setEndTime(value);
   };
 
@@ -37,7 +40,7 @@ function App() {
     const now = new Date();
     const date = now.toLocaleDateString('fr-FR');
     const time = now.toTimeString().slice(0, 5);
-    
+
     if (type === 'start' || type === 'both') {
       setStartDate(date);
       setStartTime(time);
@@ -50,52 +53,42 @@ function App() {
 
   return (
     <div className="app">
-      <div className="top-bar">
-        <div className="container">
-          <div className="top-bar-content">
-            <span className="top-bar-icon">⚡</span>
-            <span className="top-bar-text">Réservez maintenant et économisez jusqu'à 30%</span>
-          </div>
-        </div>
-      </div>
-
-
       <header className="header">
         <div className="container">
           <div className="header-content">
             <div className="logo-section">
-              <button 
-                className="menu-toggle" 
+              <button
+                className="menu-toggle"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
               >
-                <span className="menu-icon">☰</span>
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
               <h1 className="logo">ParLak</h1>
             </div>
 
             <nav className={`main-nav ${isMenuOpen ? 'open' : ''}`}>
               <a href="#find-parking" className="nav-link active">
-                <span className="nav-icon">🔍</span>
+                <Search size={20} />
                 <span className="nav-text">Find Parking</span>
               </a>
               <a href="#bookings" className="nav-link">
-                <span className="nav-icon">📋</span>
+                <ClipboardList size={20} />
                 <span className="nav-text">My Bookings</span>
               </a>
               <a href="#how-it-works" className="nav-link">
-                <span className="nav-icon">❓</span>
+                <HelpCircle size={20} />
                 <span className="nav-text">How It Works</span>
               </a>
             </nav>
 
             <div className="auth-section">
               <button className="auth-btn login">
-                <span className="btn-icon">👤</span>
+                <User size={20} />
                 <span className="btn-text">Login</span>
               </button>
               <button className="auth-btn signin">
-                <span className="btn-icon">✨</span>
+                <LogIn size={20} />
                 <span className="btn-text">Sign In</span>
               </button>
             </div>
@@ -103,7 +96,7 @@ function App() {
         </div>
       </header>
 
-   
+
       <main className="main-content">
         <div className="container">
           <div className="hero-section">
@@ -112,26 +105,26 @@ function App() {
                 Find & Reserve Parking in <span className="highlight">Seconds</span>
               </h1>
               <p className="hero-subtitle">
-                Book guaranteed parking spots at airports, events, and city centers. 
+                Book guaranteed parking spots at airports, events, and city centers.
                 Save time and money.
               </p>
             </div>
 
-  
+
             <div className="search-card">
               <form onSubmit={handleSearch} className="search-form">
                 <div className="form-header">
                   <h3 className="form-title">📍 Find Your Perfect Spot</h3>
                   <div className="form-actions">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="action-btn now-btn"
                       onClick={() => handleNow('both')}
                     >
                       Now
                     </button>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="action-btn soon-btn"
                       onClick={() => {
                         const tomorrow = new Date();
@@ -149,20 +142,21 @@ function App() {
                   {/* Location */}
                   <div className="form-group location-group">
                     <label className="form-label">
-                      <span className="label-icon">📍</span>
+                      <MapPin size={18} className="label-icon" />
                       Location
                     </label>
                     <div className="input-with-icon">
                       <input
                         type="text"
+                        id="location-input"
                         className="form-input"
                         placeholder="Enter address or landmark..."
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         required
                       />
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="input-action"
                         onClick={() => navigator.geolocation.getCurrentPosition(
                           (pos) => {
@@ -172,27 +166,28 @@ function App() {
                           () => setLocation("Near my location")
                         )}
                       >
-                        <span className="action-icon">📍</span>
+                        <MapPin size={18} />
                       </button>
                     </div>
                   </div>
 
                   <div className="form-group datetime-group">
                     <label className="form-label">
-                      <span className="label-icon">⏰</span>
+                      <Calendar size={18} className="label-icon" />
                       Start Date & Time
                     </label>
                     <div className="datetime-inputs">
                       <div className="date-wrapper">
                         <input
                           type="text"
+                          id="start-date-input"
                           className="date-input"
                           value={startDate}
                           onChange={(e) => handleDateChange('start', e.target.value)}
                           placeholder="DD/MM/YYYY"
                         />
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="date-action"
                           onClick={() => handleNow('start')}
                         >
@@ -201,6 +196,7 @@ function App() {
                       </div>
                       <div className="time-wrapper">
                         <select
+                          id="start-time-select"
                           className="time-input"
                           value={startTime}
                           onChange={(e) => handleTimeChange('start', e.target.value)}
@@ -220,23 +216,23 @@ function App() {
                     </div>
                   </div>
 
-                  {/* End Date & Time */}
                   <div className="form-group datetime-group">
                     <label className="form-label">
-                      <span className="label-icon">⏰</span>
+                      <Clock size={18} className="label-icon" />
                       End Date & Time
                     </label>
                     <div className="datetime-inputs">
                       <div className="date-wrapper">
                         <input
                           type="text"
+                          id="end-date-input"
                           className="date-input"
                           value={endDate}
                           onChange={(e) => handleDateChange('end', e.target.value)}
                           placeholder="DD/MM/YYYY"
                         />
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="date-action"
                           onClick={() => handleNow('end')}
                         >
@@ -245,6 +241,7 @@ function App() {
                       </div>
                       <div className="time-wrapper">
                         <select
+                          id="end-time-select"
                           className="time-input"
                           value={endTime}
                           onChange={(e) => handleTimeChange('end', e.target.value)}
@@ -265,19 +262,19 @@ function App() {
                   </div>
 
                   <div className="form-group search-group">
-                    <button type="submit" className="search-btn">
-                      <span className="search-icon">🔍</span>
+                    <button type="submit" id="search-submit-btn" className="search-btn">
+                      <Search size={20} />
                       <span className="search-text">Search Parking</span>
-                      <span className="search-arrow">→</span>
+                      <ArrowRight size={20} className="search-arrow" />
                     </button>
                     <p className="search-hint">
-                      <span className="hint-icon">✨</span>
+                      <Sparkles size={14} className="hint-icon" />
                       Over 1,000+ spots available
                     </p>
                   </div>
                 </div>
 
-          
+
                 <div className="quick-filters">
                   <span className="filters-label">Popular:</span>
                   <button type="button" className="filter-btn">Airports</button>
@@ -289,7 +286,6 @@ function App() {
               </form>
             </div>
 
-            {/* Stats */}
             <div className="stats-section">
               <div className="stat-item">
                 <div className="stat-number">10,000+</div>
@@ -312,10 +308,10 @@ function App() {
         </div>
       </main>
 
-      
+
       <HowItWorks />
 
-     
+
       <footer className="footer">
         <div className="container">
           <div className="footer-content">

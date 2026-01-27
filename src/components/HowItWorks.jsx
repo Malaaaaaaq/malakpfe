@@ -1,6 +1,10 @@
 // HowItWorks.jsx
 import React from 'react';
 import './HowItWorks.css';
+import {
+  MapPin, CreditCard, Car, Calendar, Clock, Map,
+  Navigation, ScanLine, Smile, CheckCircle
+} from 'lucide-react';
 
 function HowItWorks() {
   return (
@@ -22,14 +26,16 @@ function HowItWorks() {
               <div className="step-number">1</div>
               <h3 className="step-title">Search Location</h3>
             </div>
-            <div className="step-icon">🔍</div>
+            <div className="step-icon"><MapPin size={64} strokeWidth={1} /></div>
             <p className="step-description">
               Citation and select your preferred date and time
             </p>
             <div className="step-features">
-              <span className="feature">📍 Live Map</span>
-              <span className="feature">📅 Flexible Dates</span>
-              <span className="feature">🕒 Real-time Availability</span>
+              <div className="step-features">
+                <span className="feature"><Map size={16} /> Live Map</span>
+                <span className="feature"><Calendar size={16} /> Flexible Dates</span>
+                <span className="feature"><Clock size={16} /> Real-time Availability</span>
+              </div>
             </div>
           </div>
 
@@ -39,7 +45,7 @@ function HowItWorks() {
               <div className="step-number">2</div>
               <h3 className="step-title">Reserve & Pay</h3>
             </div>
-            <div className="step-icon">💳</div>
+            <div className="step-icon"><CreditCard size={64} strokeWidth={1} /></div>
             <p className="step-description">
               Complete your reservation with a QR code, and enjoy hassle-free parking with guaranteed availability.
             </p>
@@ -59,7 +65,7 @@ function HowItWorks() {
               <div className="step-number">3</div>
               <h3 className="step-title">Park & Go</h3>
             </div>
-            <div className="step-icon">🚗</div>
+            <div className="step-icon"><Car size={64} strokeWidth={1} /></div>
             <p className="step-description">
               Enjoy the convenience of booking your parking spot online and then driving directly to your destination.
             </p>
@@ -90,9 +96,11 @@ function HowItWorks() {
             Reserve Your Spot Now
           </button>
           <p className="cta-stats">
-            <span className="stat">✓ 10,000+ parking spots</span>
-            <span className="stat">✓ 98% customer satisfaction</span>
-            <span className="stat">✓ 24/7 support</span>
+            <p className="cta-stats">
+              <span className="stat"><CheckCircle size={16} /> 10,000+ parking spots</span>
+              <span className="stat"><CheckCircle size={16} /> 98% customer satisfaction</span>
+              <span className="stat"><CheckCircle size={16} /> 24/7 support</span>
+            </p>
           </p>
         </div>
       </div>
