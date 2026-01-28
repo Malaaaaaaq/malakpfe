@@ -56,7 +56,7 @@ const ChooseParkEasy = () => {
     <section className="choose-parkeasy">
       <div className="choose-container">
         <header className="choose-header">
-          <h1 className="choose-title">Pourquoi choisir ParkEasy ?</h1>
+          <h1 className="choose-title">Pourquoi choisir Parlak ?</h1>
           <p className="choose-tagline">La manière intelligente de se garer</p>
         </header>
         

@@ -9,7 +9,7 @@ const Footer = () => {
         
         {/* Section Logo et Description */}
         <div className="footer-brand">
-          <h2 className="footer-logo">ParkEasy</h2>
+          <h2 className="footer-logo">Parlak</h2>
           <p className="footer-tagline">
             Rendre le stationnement simple, rapide et abordable pour tous.
           </p>

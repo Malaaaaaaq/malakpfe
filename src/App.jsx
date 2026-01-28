@@ -4,6 +4,7 @@ import './App.css';
 import HowItWorks from './components/HowItWorks.jsx';
 import Footer from './components/Footer.jsx';
 import ChooseParkEasy from './components/chooseParkasy.jsx';
+import logo from './assets/logo.png';
 import {
   Zap, Menu, X, Search, ClipboardList, HelpCircle,
   User, LogIn, MapPin, Calendar, Clock, ArrowRight,
@@ -66,7 +67,10 @@ function App() {
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
-              <h1 className="logo">ParLak</h1>
+              <div className="logo-container">
+                <img src={logo} alt="ParLak Logo" className="logo-image" />
+                <h1 className="logo">ParLak</h1>
+              </div>
             </div>
 
             <nav className={`main-nav ${isMenuOpen ? 'open' : ''}`}>
