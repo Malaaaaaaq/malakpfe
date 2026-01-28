@@ -1,13 +1,15 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css';
-import HowItWorks from '../src/components/HowItWorks.jsx';
+import HowItWorks from './components/HowItWorks.jsx';
+import Footer from './components/Footer.jsx';
+import ChooseParkEasy from './components/chooseParkasy.jsx';
 import {
   Zap, Menu, X, Search, ClipboardList, HelpCircle,
   User, LogIn, MapPin, Calendar, Clock, ArrowRight,
   Car, Map, Headphones, Star, Sparkles
 } from 'lucide-react';
-import Footer from './components/Footer.jsx';
+
 function App() {
   const [location, setLocation] = useState('');
   const [startDate, setStartDate] = useState('27/01/2026');
@@ -310,10 +312,9 @@ function App() {
 
 
       <HowItWorks />
+<ChooseParkEasy/>
+<Footer />
      
-
-
-     <Footer />
     </div>
   );
 }
