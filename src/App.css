@@ -6,17 +6,18 @@
 }
 
 :root {
-  --primary: rgb(4, 21, 98);
-  --primary-dark: rgb(17, 70, 143);
-  --secondary: rgb(17, 70, 143);
-  --accent: rgb(218, 18, 18);
-  --light: rgb(238, 238, 238);
-  --dark: rgb(4, 21, 98);
-  --gray: rgb(17, 70, 143);
-  --gray-light: rgb(238, 238, 238);
-  --success: rgb(17, 70, 143);
-  --warning: rgb(218, 18, 18);
-  --danger: rgb(218, 18, 18);
+  --primary: #041562;
+  --primary-dark: #11468F;
+  --secondary: #11468F;
+  --accent: #DA1212;
+  --light: #EEEEEE;
+  --dark: #041562;
+  --dark-gray: #2D2D2D;
+  --gray: #11468F;
+  --gray-light: #EEEEEE;
+  --success: #11468F;
+  --warning: #DA1212;
+  --danger: #DA1212;
   --radius: 12px;
   --radius-sm: 8px;
   --shadow: 0 10px 30px rgba(4, 21, 98, 0.1);
@@ -26,7 +27,7 @@
 
 body {
   font-family: inherit;
-  background: linear-gradient(135deg, rgb(238, 238, 238) 0%, rgb(238, 238, 238) 100%);
+  background: linear-gradient(135deg, #EEEEEE 0%, #EEEEEE 100%);
   min-height: 100vh;
   color: var(--dark);
   line-height: 1.6;
