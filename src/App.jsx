@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import './App.css';
 import HowItWorks from './components/HowItWorks.jsx';
+import Footer from './components/Footer.jsx';
+import ChooseParkEasy from './components/chooseParkasy.jsx';
+import logo from './assets/logo.png';
 import {
   Zap, Menu, X, Search, ClipboardList, HelpCircle,
   User, LogIn, MapPin, Calendar, Clock, ArrowRight,
   Car, Map, Headphones, Star, Sparkles
 } from 'lucide-react';
-import ChooseParkEasy from './chooseParkasy.jsx';
-import Footer from './Footer.jsx';
 
 function App() {
   const [location, setLocation] = useState('');
@@ -66,7 +67,10 @@ function App() {
               >
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
-              <h1 className="logo">ParLak</h1>
+              <div className="logo-container">
+                <img src={logo} alt="ParLak Logo" className="logo-image" />
+                <h1 className="logo">ParLak</h1>
+              </div>
             </div>
 
             <nav className={`main-nav ${isMenuOpen ? 'open' : ''}`}>
@@ -312,8 +316,9 @@ function App() {
 
 
       <HowItWorks />
-      <ChooseParkEasy/>
-      <Footer/>
+<ChooseParkEasy/>
+<Footer />
+     
     </div>
   );
 }
