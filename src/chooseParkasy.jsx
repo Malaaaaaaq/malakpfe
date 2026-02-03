@@ -37,7 +37,7 @@ const ChooseParkEasy = () => {
         </svg>
       ),
       color: "#e74c3c"
-    },git 
+    },
     {
       id: 4,
       title: "Accès facile",
