@@ -6,6 +6,7 @@ import Footer from './components/Footer.jsx';
 import ChooseParkEasy from './components/chooseParkasy.jsx';
 import ParkingResults from './components/ParkingResults.jsx';
 import Login from './components/Login.jsx';
+import Inscription from './components/inscription.jsx';
 import AboutPage from './components/AboutPage.jsx';
 import FeaturesPage from './components/FeaturesPage.jsx';
 import ServicesPage from './components/ServicesPage.jsx';
@@ -178,7 +179,7 @@ function App() {
             <button className={`hdr-btn hdr-btn--ghost ${view === 'login' ? 'active' : ''}`} onClick={() => setView('login')}>
               <User size={17} /> {t.login}
             </button>
-            <button className="hdr-btn hdr-btn--fill">
+            <button className="hdr-btn hdr-btn--fill" onClick={() => setView('inscription')}>
               <LogIn size={17} /> {t.signup}
             </button>
             <button
@@ -346,9 +347,10 @@ function App() {
       {view === 'about' && <AboutPage lang={lang} />}
       {view === 'features' && <FeaturesPage lang={lang} />}
       {view === 'services' && <ServicesPage lang={lang} />}
-      {view === 'login' && <Login lang={lang} onBack={() => setView('home')} />}
+{view === 'login' && <Login lang={lang} onBack={() => setView('home')} />}
+      {view === 'inscription' && <Inscription lang={lang} onBack={() => setView('home')} />}
 
-      {view !== 'login' && <Footer lang={lang} />}
+      {view !== 'login' && view !== 'inscription' && <Footer lang={lang} />}
     </div>
   );
 }
