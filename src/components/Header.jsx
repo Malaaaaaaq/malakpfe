@@ -20,17 +20,17 @@ const Header = () => {
                     </div>
 
                     <nav className={`main-nav ${isMenuOpen ? 'open' : ''}`}>
-                        <a href="#find-parking" className="nav-link active">
-                            <Search size={20} />
-                            <span className="nav-text">Find Parking</span>
+                        <a href="/" className="nav-link active">
+                            Accueil
                         </a>
-                        <a href="#bookings" className="nav-link">
-                            <ClipboardList size={20} />
-                            <span className="nav-text">My Bookings</span>
+                        <a href="#services" className="nav-link">
+                            Services
                         </a>
-                        <a href="#how-it-works" className="nav-link">
-                            <HelpCircle size={20} />
-                            <span className="nav-text">How It Works</span>
+                        <a href="#features" className="nav-link">
+                            Fonctionnalités
+                        </a>
+                        <a href="#about" className="nav-link">
+                            À propos
                         </a>
                     </nav>
 

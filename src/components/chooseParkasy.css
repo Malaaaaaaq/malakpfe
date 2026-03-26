@@ -1,140 +1,124 @@
-/* ChooseParkEasy.css */
+/* ── Pourquoi choisir Parlak ── */
 .choose-parkeasy {
-  padding: 4rem 2rem;
-  background-color: #EEEEEE;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 90px 0;
+  background: white;
 }
 
 .choose-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .choose-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 64px;
 }
 
 .choose-title {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
   color: #041562;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
+  margin-bottom: 12px;
+  line-height: 1.2;
 }
 
 .choose-tagline {
-  font-size: 1.2rem;
-  color: #7f8c8d;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  color: #64748b;
+  font-weight: 400;
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
+/* Card */
 .feature-card {
-  background: white;
-  padding: 2rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  text-align: center;
+  background: #f8fafc;
+  padding: 36px 32px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1.5px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  background: linear-gradient(135deg, rgba(4,21,98,0.08), transparent) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  background: white;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(4, 21, 98, 0.1);
+  border-color: rgba(4, 21, 98, 0.1);
 }
 
+.feature-card:hover::before { opacity: 1; }
+
+/* Icon */
 .feature-icon-container {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background-color: rgba(4, 21, 98, 0.1);
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
+  background: rgba(4, 21, 98, 0.07);
+  flex-shrink: 0;
+  transition: all 0.3s;
 }
 
 .feature-card:hover .feature-icon-container {
-  transform: scale(1.1);
-  background-color: rgba(4, 21, 98, 0.15);
+  transform: scale(1.1) rotate(-4deg);
 }
 
 .feature-icon {
-  width: 32px;
-  height: 32px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+  width: 30px;
+  height: 30px;
 }
 
 .feature-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #041562;
-  margin-bottom: 1rem;
-  font-weight: 600;
+  margin: 0;
 }
 
 .feature-description {
-  color: #5a6c7d;
-  line-height: 1.6;
-  font-size: 1rem;
-  font-weight: 400;
+  color: #64748b;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  margin: 0;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-  .choose-parkeasy {
-    padding: 2.5rem 1rem;
-  }
-  
-  .choose-title {
-    font-size: 2rem;
-  }
-  
-  .choose-tagline {
-    font-size: 1.1rem;
-  }
-  
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .feature-card {
-    padding: 1.5rem 1rem;
-  }
-  
-  .feature-icon-container {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .feature-icon {
-    width: 28px;
-    height: 28px;
-  }
+  .choose-parkeasy { padding: 60px 0; }
+  .features-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
-  .choose-title {
-    font-size: 1.75rem;
-  }
-  
-  .choose-tagline {
-    font-size: 1rem;
-  }
+  .feature-card { padding: 28px 22px; }
+  .choose-title { font-size: 1.8rem; }
 }
