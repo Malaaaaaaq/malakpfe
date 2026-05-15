@@ -10,16 +10,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeNewsletter extends Mailable
+class WelcomeNewsletter extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public $firstname;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($firstname = null)
     {
-        //
+        $this->firstname = $firstname;
     }
 
     /**

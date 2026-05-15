@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeNewsletter;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -33,6 +35,14 @@ class AuthController extends Controller
             'role'      => $data['role'] ?? 'client',
             'password'  => Hash::make($data['password']),
         ]);
+
+        // Envoi de l'email de bienvenue avec gestion d'erreur pour ne pas bloquer l'inscription
+        try {
+            Mail::to($user->email)->send(new WelcomeNewsletter($user->firstname));
+        } catch (\Exception $e) {
+            // On continue sans bloquer
+            \Illuminate\Support\Facades\Log::error("Erreur envoi email inscription: " . $e->getMessage());
+        }
 
         $token = $user->createToken('parlak-token')->plainTextToken;
 

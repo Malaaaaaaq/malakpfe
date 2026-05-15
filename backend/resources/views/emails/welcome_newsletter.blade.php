@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bienvenue chez ParLak</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; border: 1px solid #eee; border-radius: 5px; }
+        .header { color: #041562; font-size: 24px; font-weight: bold; }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-    <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #041562; text-align: center;">Bienvenue chez ParLak !</h1>
-        <p style="font-size: 16px; color: #333333;">Bonjour,</p>
-        <p style="font-size: 16px; color: #333333;">
-            Merci de vous être abonné à notre newsletter. Nous sommes ravis de vous compter parmi nous ! 🚗
-        </p>
-        <p style="font-size: 16px; color: #333333;">
-            Restez actif pour recevoir toutes nos dernières nouveautés, offres exclusives et actualités sur nos parkings intelligents directement dans votre boîte de réception.
-        </p>
+<body>
+    <div class="container">
+        <div class="header">Bienvenue chez ParLak !</div>
+        <p>Bonjour {{ $firstname }},</p>
+        <p>Nous sommes <strong>ParLak</strong>, ravis de vous compter parmi nos nouveaux utilisateurs.</p>
+        <p>Grâce à notre plateforme, vous pouvez désormais réserver vos places de stationnement en toute simplicité et sécurité dans tout le Maroc.</p>
+        <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
         <br>
-        <div style="text-align: center;">
-            <a href="{{ config('app.url') }}" style="background-color: #041562; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Découvrir nos parkings</a>
-        </div>
-        <br><br>
-        <p style="font-size: 14px; color: #777777; text-align: center;">
-            L'équipe ParLak
-        </p>
+        <p>Cordialement,<br>
+        L'équipe ParLak</p>
     </div>
 </body>
 </html>

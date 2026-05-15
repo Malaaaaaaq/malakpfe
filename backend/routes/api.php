@@ -18,7 +18,7 @@ Route::get('/parkings', [\App\Http\Controllers\API\ParkingController::class, 'in
 Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request) {
     $request->validate(['email' => 'required|email']);
     // Normalement, vous enregistreriez l'email dans une table "subscribers" ici
-    \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\WelcomeNewsletter());
+    \Illuminate\Support\Facades\Mail::to($request->email)->send(new \App\Mail\WelcomeNewsletter("Ami de ParLak"));
     return response()->json(['message' => 'Email envoyé avec succès !']);
 });
 
