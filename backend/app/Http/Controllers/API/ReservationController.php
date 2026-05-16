@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Mail\ReservationConfirmed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ReservationController extends Controller
@@ -71,6 +73,14 @@ class ReservationController extends Controller
             'status'         => 'upcoming',
             'qr_token'       => Str::uuid(),
         ]);
+
+        // Send confirmation email
+        try {
+            Mail::to($request->user()->email)->send(new ReservationConfirmed($reservation));
+        } catch (\Exception $e) {
+            // On ignore l'erreur d'envoi pour ne pas bloquer la réservation
+            \Illuminate\Support\Facades\Log::error("Erreur envoi email réservation: " . $e->getMessage());
+        }
 
         return response()->json([
             'reservation' => $reservation,
