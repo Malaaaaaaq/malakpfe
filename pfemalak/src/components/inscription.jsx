@@ -1,6 +1,7 @@
 // src/components/Inscription.jsx
 import { useState } from 'react';
 import './Inscription.css';
+import AgentLocationModal from './AgentLocationModal.jsx';
 
 const Inscription = ({ onLogin }) => {
   const [selectedRole, setSelectedRole] = useState('client');
@@ -21,6 +22,7 @@ const Inscription = ({ onLogin }) => {
   const [success, setSuccess] = useState('');
   const [passwordStrength, setPasswordStrength] = useState({ text: '', color: '' });
   const [isLoading, setIsLoading] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
 
   const roles = [
     { id: 'agent', label: 'Agent' },
@@ -359,6 +361,31 @@ const Inscription = ({ onLogin }) => {
                 <button
                   type="button"
                   className="btn-geolocate-agent"
+                  onClick={() => setIsMapOpen(true)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: '#041562',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: 'white',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    boxShadow: '0 4px 12px rgba(4, 21, 98, 0.2)'
+                  }}
+                >
+                  🗺️ Choisir sur la carte (Plus précis)
+                </button>
+
+                <button
+                  type="button"
+                  className="btn-geolocate-agent"
                   onClick={() => {
                     if (navigator.geolocation) {
                       navigator.geolocation.getCurrentPosition((pos) => {
@@ -389,7 +416,7 @@ const Inscription = ({ onLogin }) => {
                     gap: '0.5rem'
                   }}
                 >
-                  📍 Utiliser ma position actuelle
+                  📍 Utiliser ma position GPS actuelle
                 </button>
               </div>
             )}
@@ -424,6 +451,14 @@ const Inscription = ({ onLogin }) => {
           </div>{/* fin insc-card */}
         </div>
       </div>
+      {isMapOpen && (
+        <AgentLocationModal 
+          onClose={() => setIsMapOpen(false)} 
+          onConfirm={(pos) => {
+            setFormData(prev => ({ ...prev, latitude: pos.lat.toFixed(6), longitude: pos.lng.toFixed(6) }));
+          }} 
+        />
+      )}
     </div>
   );
 };
