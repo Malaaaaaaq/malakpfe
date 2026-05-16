@@ -11,9 +11,11 @@ Votre réservation pour le parking **{{ $reservation->parking_name }}** à **{{ 
 - **Date d'entrée :** {{ $reservation->entry_date->format('d/m/Y') }} à {{ $reservation->entry_time }}
 - **Date de sortie :** {{ $reservation->exit_time }}
 - **Place :** {{ $reservation->spot_code }}
-- **Prix Total :** {{ number_format($reservation->total_price, 2) }} DH
+- **Prix Total :** {{ number_format($reservation->total_price, 2) }} DH (À régler sur place)
 
 Vous pouvez retrouver votre QR Code d'accès directement dans l'application ParLak dans la section "Mes Réservations".
+
+**Note importante :** Le paiement s'effectuera à l'entrée du parking sur présentation de votre QR Code.
 
 <x-mail::button :url="config('app.url') . '/reservations'">
 Voir mes réservations

@@ -401,11 +401,8 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
       { id:'reservations',label:'Mes Réservations', Icon: List  },
       { id:'vehicles',  label:'Mes Véhicules',      Icon: Car   },
     ]},
-    { section: 'FINANCE', items: [
-      { id:'payment',       label:'Paiement',       Icon: CreditCard },
-      { id:'notifications', label:'Notifications',  Icon: Bell, badge: 3 },
-    ]},
     { section: 'COMPTE', items: [
+      { id:'notifications', label:'Notifications',  Icon: Bell, badge: 3 },
       { id:'profile', label:'Mon Profil', Icon: User },
     ]},
   ];
@@ -578,6 +575,9 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
               <QRCodeSVG/>
             </div>
             <p className="qr-hint">Présentez ce code à l'entrée du parking</p>
+            <p style={{ fontSize: '0.85rem', color: '#041562', fontWeight: '600', marginTop: '0.5rem', textAlign: 'center' }}>
+              💳 Le paiement s'effectue sur place à votre arrivée.
+            </p>
             <button className="btn-dl-qr" onClick={handleDownloadQR}><Download size={14}/> Télécharger le QR code</button>
           </div>
 
@@ -891,29 +891,15 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
             <div className="price-row total-row"><span>Total</span><strong className="text-blue">{total} MAD</strong></div>
           </div>
 
-          {/* Payment Method Selection */}
-          <div className="recap-section-title" style={{ marginTop: '1.5rem', marginBottom: '0.75rem' }}>MODE DE PAIEMENT</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', padding: '0.75rem', border: paymentMethod === 'wallet' ? '2px solid #041562' : '1px solid #cbd5e1', borderRadius: '8px', background: paymentMethod === 'wallet' ? '#eff6ff' : 'white', transition: 'all 0.2s' }}>
-              <input type="radio" name="payMethod" checked={paymentMethod === 'wallet'} onChange={() => setPaymentMethod('wallet')} style={{ margin: 0 }} />
-              <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.9rem', color: '#0f172a' }}>Solde ParLak</strong>
-                  <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Déduit immédiatement</span>
-                </div>
-                <Wallet size={16} color={paymentMethod === 'wallet' ? '#041562' : '#94a3b8'} />
+          <div className="recap-section-title" style={{ marginTop: '1.5rem', marginBottom: '0.75rem' }}>PAIEMENT</div>
+          <div style={{ padding: '0.75rem', border: '1px solid #cbd5e1', borderRadius: '8px', background: '#eff6ff', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <QrCode size={18} color="#041562" />
+              <div>
+                <strong style={{ display: 'block', fontSize: '0.9rem', color: '#0f172a' }}>Paiement sur place</strong>
+                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Réglez votre stationnement à l'arrivée</span>
               </div>
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', padding: '0.75rem', border: paymentMethod === 'sur_place' ? '2px solid #041562' : '1px solid #cbd5e1', borderRadius: '8px', background: paymentMethod === 'sur_place' ? '#eff6ff' : 'white', transition: 'all 0.2s' }}>
-              <input type="radio" name="payMethod" checked={paymentMethod === 'sur_place'} onChange={() => setPaymentMethod('sur_place')} style={{ margin: 0 }} />
-              <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '0.9rem', color: '#0f172a' }}>Payer sur place</strong>
-                  <span style={{ fontSize: '0.8rem', color: '#64748b' }}>À l'entrée du parking</span>
-                </div>
-                <QrCode size={16} color={paymentMethod === 'sur_place' ? '#041562' : '#94a3b8'} />
-              </div>
-            </label>
+            </div>
           </div>
 
           {/* Confirm button */}
@@ -932,17 +918,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
             <AlertCircle size={12}/>
             Annulation gratuite jusqu'à <strong>30 minutes</strong> avant l'heure d'entrée.
           </div>
-
-          {/* Solde */}
-          <div className="solde-bar">
-            <div>
-              <span className="solde-label">SOLDE DISPONIBLE</span>
-              <span className="solde-amount">120 <small>MAD</small></span>
-            </div>
-            <button className="btn-recharge">+ Recharger</button>
-          </div>
         </div>
-
       </div>
     );
   };
@@ -969,7 +945,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
           {[
             { label:'Réservations à venir', value: upcoming.length,  Icon: AlertCircle, color:'#3b82f6' },
             { label:'Trajets complétés',    value: completed.length, Icon: CheckCircle, color:'#10b981' },
-            { label:'Total dépensé (MAD)',  value: `${spent} MAD`,   Icon: CreditCard,  color:'#8b5cf6' },
+            { label:'Estimation totale (MAD)',  value: `${spent} MAD`,   Icon: Wallet,      color:'#8b5cf6' },
             { label:'Points fidélité',      value:'1 250',           Icon: Gift,        color:'#f59e0b' },
           ].map(({ label, value, Icon, color }) => (
             <div key={label} className="stat-card">
@@ -1560,7 +1536,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
               {[
                 { n:1, label:'Choisir un créneau'    },
                 { n:2, label:'Sélectionner la place' },
-                { n:3, label:'Confirmer & Payer'     },
+                { n:3, label:'Confirmer'              },
               ].map(({ n, label }, i) => (
                 <React.Fragment key={n}>
                   {i > 0 && <div className={`step-line ${step >= n ? 'done' : ''}`}/>}
@@ -1587,7 +1563,6 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
         {activePage === 'vehicles'      && <VehiclesPage/>}
         {activePage === 'profile'       && <ProfilePage/>}
         {activePage === 'notifications' && <NotificationsPage/>}
-        {activePage === 'payment' && <PaymentPage/>}
       </div>
 
       {showAddVehicle && <AddVehicleModal/>}

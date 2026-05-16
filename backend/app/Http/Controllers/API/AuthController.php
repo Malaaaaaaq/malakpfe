@@ -25,6 +25,9 @@ class AuthController extends Controller
             'phone'     => 'nullable|string|max:20',
             'password'  => ['required', 'confirmed', Password::min(6)],
             'role'      => 'in:client,agent,admin',
+            'latitude'     => 'nullable|numeric',
+            'longitude'    => 'nullable|numeric',
+            'parking_name' => 'nullable|string|max:150',
         ]);
 
         $user = User::create([
@@ -33,6 +36,9 @@ class AuthController extends Controller
             'email'     => $data['email'],
             'phone'     => $data['phone'] ?? null,
             'role'      => $data['role'] ?? 'client',
+            'parking_name' => $data['parking_name'] ?? null,
+            'latitude'  => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
             'password'  => Hash::make($data['password']),
         ]);
 

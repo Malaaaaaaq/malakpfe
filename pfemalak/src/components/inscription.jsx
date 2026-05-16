@@ -12,6 +12,9 @@ const Inscription = ({ onLogin }) => {
     phone: '',
     password: '',
     confirmPassword: '',
+    latitude: '',
+    longitude: '',
+    parking_name: '',
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
@@ -143,6 +146,9 @@ const Inscription = ({ onLogin }) => {
           password: formData.password,
           password_confirmation: formData.confirmPassword,
           role: selectedRole,
+          latitude: selectedRole === 'agent' ? formData.latitude : undefined,
+          longitude: selectedRole === 'agent' ? formData.longitude : undefined,
+          parking_name: selectedRole === 'agent' ? formData.parking_name : undefined,
         }),
       });
 
@@ -311,6 +317,82 @@ const Inscription = ({ onLogin }) => {
                 autoComplete="new-password"
               />
             </div>
+
+            {selectedRole === 'agent' && (
+              <div className="agent-extra-fields">
+                <h3 style={{ fontSize: '1rem', color: '#041562', margin: '1.5rem 0 1rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}>Informations du Parking</h3>
+                
+                <div className="form-group">
+                  <label>Nom du Parking *</label>
+                  <input
+                    type="text"
+                    name="parking_name"
+                    value={formData.parking_name}
+                    onChange={handleInputChange}
+                    placeholder="Ex: Parking Al Maghrib"
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Latitude *</label>
+                    <input
+                      type="text"
+                      name="latitude"
+                      value={formData.latitude}
+                      onChange={handleInputChange}
+                      placeholder="33.5731"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Longitude *</label>
+                    <input
+                      type="text"
+                      name="longitude"
+                      value={formData.longitude}
+                      onChange={handleInputChange}
+                      placeholder="-7.5898"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-geolocate-agent"
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition((pos) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          latitude: pos.coords.latitude.toFixed(6),
+                          longitude: pos.coords.longitude.toFixed(6)
+                        }));
+                      }, (err) => {
+                        setError("Impossible d'obtenir votre position. Vérifiez vos permissions.");
+                      });
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: '#f8fafc',
+                    border: '1px dashed #cbd5e1',
+                    borderRadius: '8px',
+                    color: '#041562',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}
+                >
+                  📍 Utiliser ma position actuelle
+                </button>
+              </div>
+            )}
             
             <div className="checkbox-group">
               <input
