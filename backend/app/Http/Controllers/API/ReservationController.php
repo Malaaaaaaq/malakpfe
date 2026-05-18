@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Models\Parking;
+use App\Models\ParkingSpot;
 use App\Mail\ReservationConfirmed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -58,10 +60,29 @@ class ReservationController extends Controller
             return response()->json(['message' => 'Véhicule invalide.'], 403);
         }
 
+        $parkingId = $request->input('parking_id');
+        $realSpotId = null;
+
+        if ($parkingId) {
+            // Find a spot in this parking with the same code
+            $spot = \App\Models\ParkingSpot::where('code', $data['spot_code'])
+                ->whereHas('zone', function($q) use ($parkingId) {
+                    $q->where('parking_id', $parkingId);
+                })
+                ->first();
+            
+            if ($spot) {
+                $realSpotId = $spot->id;
+                // Mark as occupied for demo
+                $spot->update(['status' => 'occupee']);
+            }
+        }
+
         $reservation = Reservation::create([
             'reference'      => 'PRK-' . date('Y') . '-' . strtoupper(Str::random(6)),
             'user_id'        => $request->user()->id,
             'vehicle_id'     => $data['vehicle_id'],
+            'spot_id'        => $realSpotId,
             'spot_code'      => $data['spot_code'],
             'parking_name'   => $data['parking_name'],
             'city_name'      => $data['city_name'],
@@ -106,5 +127,84 @@ class ReservationController extends Controller
         }
 
         return response()->json(['message' => 'Réservation annulée.']);
+    }
+
+    public function agentReservations(Request $request)
+    {
+        $user = $request->user();
+        
+        // On récupère tous les IDs des parkings possédés par cet agent
+        $parkingIds = Parking::where('user_id', $user->id)->pluck('id');
+
+        if ($parkingIds->isEmpty()) {
+            return response()->json([
+                'message' => 'Aucun parking associé à cet agent.',
+                'reservations' => [],
+                'stats' => [
+                    'total_spots' => 0,
+                    'free_spots' => 0,
+                    'today_count' => 0,
+                    'upcoming_count' => 0
+                ]
+            ]);
+        }
+
+        // Toutes les réservations pour TOUS les parkings de l'agent
+        $reservations = Reservation::whereHas('spot.zone', function ($query) use ($parkingIds) {
+            $query->whereIn('parking_id', $parkingIds);
+        })->with(['user', 'vehicle', 'spot.zone.parking'])->latest()->get();
+
+        // Statistiques cumulées
+        $stats = [
+            'total_spots' => ParkingSpot::whereHas('zone', function($q) use ($parkingIds){
+                $q->whereIn('parking_id', $parkingIds);
+            })->count(),
+            'free_spots' => ParkingSpot::whereHas('zone', function($q) use ($parkingIds){
+                $q->whereIn('parking_id', $parkingIds);
+            })->where('status', 'libre')->count(),
+            'today_count' => Reservation::whereHas('spot.zone', function ($q) use ($parkingIds) {
+                $q->whereIn('parking_id', $parkingIds);
+            })->whereDate('entry_date', now())->count(),
+            'upcoming_count' => Reservation::whereHas('spot.zone', function ($q) use ($parkingIds) {
+                $q->whereIn('parking_id', $parkingIds);
+            })->where('status', 'upcoming')->count(),
+        ];
+
+        return response()->json([
+            'reservations' => $reservations,
+            'stats' => $stats
+        ]);
+    }
+
+    public function confirm(Request $request, Reservation $reservation)
+    {
+        $user = $request->user();
+        if ($user->role !== 'agent') {
+            return response()->json(['message' => 'Non autorisé.'], 403);
+        }
+
+        $reservation->update(['status' => 'confirmed']);
+
+        if ($reservation->spot) {
+            $reservation->spot->update(['status' => 'occupee']);
+        }
+
+        return response()->json(['message' => 'Réservation confirmée avec succès.', 'reservation' => $reservation]);
+    }
+
+    public function refuse(Request $request, Reservation $reservation)
+    {
+        $user = $request->user();
+        if ($user->role !== 'agent') {
+            return response()->json(['message' => 'Non autorisé.'], 403);
+        }
+
+        $reservation->update(['status' => 'refused']);
+
+        if ($reservation->spot) {
+            $reservation->spot->update(['status' => 'libre']);
+        }
+
+        return response()->json(['message' => 'Réservation refusée. La place a été libérée.', 'reservation' => $reservation]);
     }
 }

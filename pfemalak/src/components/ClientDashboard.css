@@ -1291,3 +1291,241 @@
   .form-grid-2 { grid-template-columns: 1fr; }
   .spot-card { width: 58px; height: 64px; }
 }
+
+/* ── Premium Reservations Banner ── */
+.reservations-premium-banner {
+  background: linear-gradient(135deg, #041562 0%, #1e3a8a 100%);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.2), 0 8px 10px -6px rgba(30, 58, 138, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.reservations-premium-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.rpb-left {
+  flex: 1;
+  max-width: 60%;
+  z-index: 2;
+}
+
+.rpb-tag {
+  background: rgba(255, 255, 255, 0.15);
+  color: #93c5fd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rpb-left h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.rpb-left p {
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 1.25rem 0;
+  line-height: 1.5;
+}
+
+.rpb-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.rpb-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.rpb-stat-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #60a5fa;
+  line-height: 1.1;
+}
+
+.rpb-stat-lbl {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.rpb-right {
+  width: 260px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.rpb-lottie-container {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.1);
+}
+
+/* ── Empty State ── */
+.reservations-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3.5rem 2rem;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.res-empty-lottie {
+  width: 220px;
+  height: 220px;
+  margin-bottom: 1.5rem;
+}
+
+.reservations-empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+}
+
+.reservations-empty-state p {
+  font-size: 0.88rem;
+  color: #64748b;
+  max-width: 440px;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .reservations-premium-banner {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  .rpb-left {
+    max-width: 100%;
+    text-align: center;
+  }
+  .rpb-stats {
+    justify-content: center;
+  }
+  .rpb-right {
+    width: 200px;
+    height: 120px;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   BACKGROUND ANIMATION
+══════════════════════════════════════════════ */
+.dashboard-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.45; /* Increased visibility */
+  pointer-events: none; /* Do not block clicks */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dashboard-background > div {
+  width: 120vw;
+  height: 120vh;
+  object-fit: cover;
+  transform: scale(1.3); /* Made larger as requested */
+}
+
+/* Ensure the layout wraps over the background properly */
+.dash-layout {
+  position: relative;
+  z-index: 1;
+  background: transparent; /* Allow background to show */
+}
+
+/* Keep the sidebar and topbar opaque */
+.sidebar, .content-topbar {
+  background: #0f172a; /* Sidebar default */
+}
+.content-topbar {
+  background: white; /* Topbar default */
+}
+
+/* ══════════════════════════════════════════════
+   VEHICLES PAGE BACKGROUND
+══════════════════════════════════════════════ */
+.vehicles-page-wrapper {
+  position: relative;
+  min-height: calc(100vh - 120px);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
+}
+
+.vehicles-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.8; /* Professional transparency */
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius);
+}
+
+.vehicles-background > div {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vehicles-content-layer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhance vehicle cards against the background */
+.vehicle-card {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}

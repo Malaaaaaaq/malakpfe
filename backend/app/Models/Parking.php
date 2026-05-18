@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Parking extends Model
 {
     protected $fillable = [
-        'city_id', 'name', 'address', 'latitude', 'longitude',
+        'city_id', 'user_id', 'name', 'address', 'latitude', 'longitude',
         'total_spots', 'rating', 'is_active',
     ];
 

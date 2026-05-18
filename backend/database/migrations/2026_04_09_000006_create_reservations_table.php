@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('exit_time');
             $table->unsignedTinyInteger('duration_hours');
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['upcoming', 'completed', 'cancelled'])->default('upcoming');
+            $table->string('status')->default('upcoming');
             $table->string('qr_token')->unique()->nullable();
             $table->timestamps();
         });

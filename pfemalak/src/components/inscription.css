@@ -45,6 +45,18 @@
   color: #fff;
 }
 
+.lottie-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  height: 140%;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .left-panel::after {
   content: '';
   position: absolute;
@@ -91,6 +103,8 @@
 .logo {
   margin-bottom: 44px;
   animation: lpFadeDown .6s .1s both;
+  position: relative;
+  z-index: 2;
 }
 .logo h1 {
   font-size: 30px;
@@ -110,6 +124,8 @@
 .welcome-message {
   animation: lpFadeUp .6s .25s both;
   margin-bottom: 36px;
+  position: relative;
+  z-index: 2;
 }
 .welcome-message h2 {
   font-size: 27px;
@@ -127,6 +143,8 @@
 .features {
   margin-bottom: 44px;
   animation: lpFadeUp .6s .4s both;
+  position: relative;
+  z-index: 2;
 }
 .features h3 {
   font-size: 12px;
@@ -186,16 +204,36 @@
   background: var(--light);
   padding: 40px 44px;
   overflow-y: auto;
+  overflow-x: hidden;
+  position: relative; /* Positioning context for background animation */
 }
 
-/* Carte formulaire */
+/* Background animation */
+.right-panel-bg-lottie {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  opacity: 0.12; /* Subtle and professional transparency */
+  pointer-events: none; /* Let user interactions click through to forms */
+  z-index: 1;
+}
+
+/* Carte formulaire (Glassmorphic design) */
 .insc-card {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.85); /* Slightly translucent */
+  backdrop-filter: blur(14px); /* Blur background */
+  -webkit-backdrop-filter: blur(14px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 20px;
   padding: 36px 32px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(10,22,40,.12);
+  box-shadow: 0 20px 60px rgba(10, 22, 40, 0.08);
   animation: lpCardIn .5s .3s cubic-bezier(.34,1.56,.64,1) both;
+  position: relative;
+  z-index: 2; /* Elevate card above the animation */
 }
 @keyframes lpCardIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 

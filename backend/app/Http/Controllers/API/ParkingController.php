@@ -41,4 +41,79 @@ class ParkingController extends Controller
 
         return response()->json($parkings);
     }
+    public function zones(Parking $parking)
+    {
+        $zones = $parking->zones()->with('spots')->get();
+        return response()->json($zones);
+    }
+
+    public function agentSpots(Request $request)
+    {
+        $user = $request->user();
+        $parkingIds = Parking::where('user_id', $user->id)->pluck('id');
+
+        if ($parkingIds->isEmpty()) {
+            return response()->json(['zones' => [], 'stats' => ['total' => 0, 'libre' => 0, 'occupee' => 0]]);
+        }
+
+        $zones = \App\Models\ParkingZone::whereIn('parking_id', $parkingIds)
+            ->with(['spots', 'parking'])
+            ->get();
+
+        $allSpots = $zones->flatMap->spots;
+
+        return response()->json([
+            'zones' => $zones,
+            'stats' => [
+                'total'   => $allSpots->count(),
+                'libre'   => $allSpots->where('status', 'libre')->count(),
+                'occupee' => $allSpots->where('status', 'occupee')->count(),
+                'reservee'=> $allSpots->where('status', 'reservee')->count(),
+            ],
+        ]);
+    }
+
+    public function updateSpot(Request $request, \App\Models\ParkingSpot $spot)
+    {
+        $request->validate(['status' => 'required|in:libre,occupee,maintenance']);
+        $spot->update(['status' => $request->status]);
+        return response()->json(['message' => 'Statut mis à jour.', 'spot' => $spot]);
+    }
+
+    public function getAgentParking(Request $request)
+    {
+        $user = $request->user();
+        $parking = Parking::where('user_id', $user->id)->with('city')->first();
+        
+        if (!$parking) {
+            return response()->json(['message' => 'Aucun parking trouvé.'], 404);
+        }
+
+        return response()->json($parking);
+    }
+
+    public function updateParking(Request $request)
+    {
+        $user = $request->user();
+        $parking = Parking::where('user_id', $user->id)->first();
+
+        if (!$parking) {
+            return response()->json(['message' => 'Aucun parking trouvé.'], 404);
+        }
+
+        $data = $request->validate([
+            'name' => 'required|string|max:150',
+            'address' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $parking->update($data);
+
+        return response()->json([
+            'message' => 'Paramètres du parking mis à jour avec succès.',
+            'parking' => $parking
+        ]);
+    }
 }

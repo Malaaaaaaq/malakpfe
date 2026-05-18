@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import './Inscription.css';
 import AgentLocationModal from './AgentLocationModal.jsx';
+import Lottie from 'lottie-react';
+import carSafetyAnimation from '../animations/anim1.json';
+import bgAnimationData from '../animations/anim.json';
 
 const Inscription = ({ onLogin }) => {
   const [selectedRole, setSelectedRole] = useState('client');
@@ -16,6 +19,8 @@ const Inscription = ({ onLogin }) => {
     latitude: '',
     longitude: '',
     parking_name: '',
+    city_id: '1', // Default
+    total_spots: '40',
   });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
@@ -151,6 +156,8 @@ const Inscription = ({ onLogin }) => {
           latitude: selectedRole === 'agent' ? formData.latitude : undefined,
           longitude: selectedRole === 'agent' ? formData.longitude : undefined,
           parking_name: selectedRole === 'agent' ? formData.parking_name : undefined,
+          city_id: selectedRole === 'agent' ? formData.city_id : undefined,
+          total_spots: selectedRole === 'agent' ? parseInt(formData.total_spots) : undefined,
         }),
       });
 
@@ -183,6 +190,9 @@ const Inscription = ({ onLogin }) => {
       <div className="inscription-wrapper">
         {/* Left Panel */}
         <div className="left-panel">
+          <div className="lottie-bg">
+            <Lottie animationData={carSafetyAnimation} loop={true} />
+          </div>
           <div className="lp-circle-1"/>
           <div className="lp-circle-2"/>
           <div className="lp-dot-1"/>
@@ -212,6 +222,9 @@ const Inscription = ({ onLogin }) => {
 
         {/* Right Panel */}
         <div className="right-panel">
+          <div className="right-panel-bg-lottie">
+            <Lottie animationData={bgAnimationData} loop={true} />
+          </div>
           <div className="insc-card">
           <h2 className="form-title">Créer un compte</h2>
           <p className="form-subtitle">Rejoignez ParLak en quelques secondes</p>
@@ -333,6 +346,35 @@ const Inscription = ({ onLogin }) => {
                     onChange={handleInputChange}
                     placeholder="Ex: Parking Al Maghrib"
                   />
+                </div>
+
+                <div className="form-group">
+                  <label>Nombre total de places *</label>
+                  <input
+                    type="number"
+                    name="total_spots"
+                    value={formData.total_spots}
+                    onChange={handleInputChange}
+                    min="4"
+                    max="200"
+                    placeholder="Ex: 40"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Ville *</label>
+                  <select 
+                    name="city_id" 
+                    value={formData.city_id} 
+                    onChange={handleInputChange}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginBottom: '1rem' }}
+                  >
+                    <option value="1">Casablanca</option>
+                    <option value="2">Rabat</option>
+                    <option value="3">Marrakech</option>
+                    <option value="4">Tanger</option>
+                    <option value="5">Agadir</option>
+                  </select>
                 </div>
 
                 <div className="form-row">

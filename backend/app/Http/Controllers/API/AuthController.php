@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Parking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +29,8 @@ class AuthController extends Controller
             'latitude'     => 'nullable|numeric',
             'longitude'    => 'nullable|numeric',
             'parking_name' => 'nullable|string|max:150',
+            'city_id'      => 'nullable|integer',
+            'total_spots'  => 'nullable|integer|min:4|max:200',
         ]);
 
         $user = User::create([
@@ -41,6 +44,45 @@ class AuthController extends Controller
             'longitude' => $data['longitude'] ?? null,
             'password'  => Hash::make($data['password']),
         ]);
+
+        // Si c'est un agent, on crée automatiquement son parking avec ses zones
+        if ($user->role === 'agent' && isset($data['parking_name'])) {
+            $totalSpots = intval($data['total_spots'] ?? 40);
+
+            $parking = Parking::create([
+                'user_id' => $user->id,
+                'city_id' => $data['city_id'] ?? 1,
+                'name'    => $data['parking_name'],
+                'address' => "Adresse à préciser",
+                'latitude'  => $data['latitude'],
+                'longitude' => $data['longitude'],
+                'total_spots' => $totalSpots,
+                'is_active'   => true,
+            ]);
+
+            // Répartition des places sur 4 zones
+            $spotsPerZone = intval($totalSpots / 4);
+            $remainder = $totalSpots % 4;
+
+            $zones = ['Zone A', 'Zone B', 'Zone C', 'Zone D'];
+            foreach ($zones as $index => $zoneName) {
+                $z = $parking->zones()->create([
+                    'name' => $zoneName,
+                    'level' => $index < 2 ? 1 : 2
+                ]);
+
+                $count = $spotsPerZone + ($index === 3 ? $remainder : 0);
+
+                for ($i = 1; $i <= $count; $i++) {
+                    $z->spots()->create([
+                        'code' => substr($zoneName, -1) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT),
+                        'type' => 'standard',
+                        'price_per_hour' => 10,
+                        'status' => 'libre'
+                    ]);
+                }
+            }
+        }
 
         // Envoi de l'email de bienvenue avec gestion d'erreur pour ne pas bloquer l'inscription
         try {

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/parkings', [\App\Http\Controllers\API\ParkingController::class, 'index']);
+Route::get('/parkings/{parking}/zones', [\App\Http\Controllers\API\ParkingController::class, 'zones']);
 
 // ── Newsletter ──────────────────────────────────────────────
 Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request) {
@@ -54,5 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Réservations
     Route::get('/reservations',                  [ReservationController::class, 'index']);
     Route::post('/reservations',                 [ReservationController::class, 'store']);
+    Route::get('/agent/reservations',            [ReservationController::class, 'agentReservations']);
+    Route::post('/agent/reservations/{reservation}/confirm', [ReservationController::class, 'confirm']);
+    Route::post('/agent/reservations/{reservation}/refuse',  [ReservationController::class, 'refuse']);
+    Route::get('/agent/spots',                   [\App\Http\Controllers\API\ParkingController::class, 'agentSpots']);
+    Route::patch('/agent/spots/{spot}',          [\App\Http\Controllers\API\ParkingController::class, 'updateSpot']);
+    Route::get('/agent/parking',                 [\App\Http\Controllers\API\ParkingController::class, 'getAgentParking']);
+    Route::put('/agent/parking',                 [\App\Http\Controllers\API\ParkingController::class, 'updateParking']);
     Route::patch('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel']);
 });
