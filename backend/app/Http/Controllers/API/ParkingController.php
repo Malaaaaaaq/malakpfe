@@ -75,7 +75,7 @@ class ParkingController extends Controller
 
     public function updateSpot(Request $request, \App\Models\ParkingSpot $spot)
     {
-        $request->validate(['status' => 'required|in:libre,occupee,maintenance']);
+        $request->validate(['status' => 'required|in:libre,occupee,reservee']);
         $spot->update(['status' => $request->status]);
         return response()->json(['message' => 'Statut mis à jour.', 'spot' => $spot]);
     }

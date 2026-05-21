@@ -145,14 +145,9 @@ function App() {
 
   return (
     <div className="app">
-      {/* ── TOPBAR + HEADER (masqués sur le dashboard) ── */}
+      {/* ── HEADER (masqué sur le dashboard) ── */}
       {view !== 'dashboard' && view !== 'admin-login' && (
         <>
-          <div className="topbar">
-            <Sparkles size={14} className="topbar-icon" />
-            <span>Nouveau&nbsp;: {t.promo}&nbsp;<strong>PARLAK1</strong></span>
-            <a href="#find-parking" className="topbar-cta">{t.enProfiter} →</a>
-          </div>
           <header className="header">
         <div className="hdr-inner">
           <a href="/" className="hdr-logo" onClick={(e) => { e.preventDefault(); setView('home'); }}>

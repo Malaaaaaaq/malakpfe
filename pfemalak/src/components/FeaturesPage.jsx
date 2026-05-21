@@ -149,14 +149,11 @@ export default function FeaturesPage({ lang = 'FR' }) {
               </ul>
             </div>
             <div className="showcase-image">
-               <div className="phone-mockup">
-                 <div className="phone-screen">
-                   <MapPin size={40} style={{ margin: '30px 0 10px', color: 'white' }} />
-                   <div style={{ fontSize: '10px', opacity: 0.7, color: 'white' }}>PARLAK APP</div>
-                   <div style={{ fontSize: '14px', fontWeight: 700, marginTop: '20px', color: 'white' }}>{lang === 'FR' ? 'Parking Réservé !' : 'Parking Reserved !'}</div>
-                   <div className="qr-box">QR CODE</div>
-                 </div>
-               </div>
+              <img 
+                src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800" 
+                alt="Driver using parking app" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 1, position: 'relative' }} 
+              />
             </div>
           </div>
 
@@ -173,20 +170,11 @@ export default function FeaturesPage({ lang = 'FR' }) {
               </ul>
             </div>
             <div className="showcase-image">
-               <div className="mockup-ui">
-                 <div className="ui-header">
-                   <div className="ui-chart-box"></div>
-                   <div className="ui-text-lines">
-                     <div className="line long"></div>
-                     <div className="line short"></div>
-                   </div>
-                 </div>
-                 <div className="ui-grid">
-                   <div className="ui-item"></div>
-                   <div className="ui-item"></div>
-                 </div>
-                 <div className="ui-footer"></div>
-               </div>
+              <img 
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" 
+                alt="Parking owner dashboard analytics" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 1, position: 'relative' }} 
+              />
             </div>
           </div>
         </div>

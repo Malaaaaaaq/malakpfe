@@ -74,7 +74,7 @@ const AgentPage = ({ user, onLogout }) => {
   };
 
   const toggleSpotStatus = async (spot) => {
-    const next = spot.status === 'libre' ? 'maintenance' : 'libre';
+    const next = spot.status === 'libre' ? 'occupee' : 'libre';
     await apiFetch(`/agent/spots/${spot.id}`, {
       method: 'PATCH',
       body: JSON.stringify({ status: next }),
@@ -287,7 +287,7 @@ const AgentPage = ({ user, onLogout }) => {
         {[{label:'Total', val: allSpots.length, color:'#2563eb'},
           {label:'Libres', val: allSpots.filter(s=>s.status==='libre').length, color:'#10b981'},
           {label:'Occupées', val: allSpots.filter(s=>s.status==='occupee').length, color:'#ef4444'},
-          {label:'Maintenance', val: allSpots.filter(s=>s.status==='maintenance').length, color:'#f59e0b'},
+          {label:'Réservée', val: allSpots.filter(s=>s.status==='reservee').length, color:'#8b5cf6'},
         ].map(({label, val, color}) => (
           <div key={label} style={{ background:'white', borderRadius:'10px', padding:'0.6rem 1.2rem',
             boxShadow:'0 1px 4px rgba(0,0,0,.08)', borderLeft:`3px solid ${color}` }}>
@@ -317,7 +317,7 @@ const AgentPage = ({ user, onLogout }) => {
             <option value="all">Tous les statuts</option>
             <option value="libre">Libre</option>
             <option value="occupee">Occupée</option>
-            <option value="maintenance">Maintenance</option>
+            <option value="reservee">Réservée</option>
           </select>
         </div>
       </div>
@@ -334,14 +334,14 @@ const AgentPage = ({ user, onLogout }) => {
               key={spot.id}
               className={`spot-item-card ${
                 spot.status === 'libre' ? 'free'
-                : spot.status === 'maintenance' ? 'maintenance'
+                : spot.status === 'reservee' ? 'reservee'
                 : 'occupied'
               }`}
             >
               <div className="spot-id">{spot.code}</div>
               <div className="spot-zone" style={{ fontSize:'0.7rem', color:'#94a3b8', marginBottom:'2px' }}>{spot.zoneName}</div>
               <div className="spot-status">
-                {spot.status === 'libre' ? 'Libre' : spot.status === 'maintenance' ? 'Maintenance' : 'Occupée'}
+                {spot.status === 'libre' ? 'Libre' : spot.status === 'reservee' ? 'Réservée' : 'Occupée'}
               </div>
               <div style={{ fontSize:'0.72rem', color:'#94a3b8', marginBottom:'0.4rem' }}>{spot.type} · {spot.price_per_hour} MAD/h</div>
               <div className="spot-actions">
