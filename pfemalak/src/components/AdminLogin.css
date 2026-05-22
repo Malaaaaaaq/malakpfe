@@ -273,6 +273,48 @@
   box-shadow: 0 0 0 3px rgba(37,99,235,.12), 0 0 20px rgba(37,99,235,.08);
 }
 
+/* ── Select Dropdown ── */
+.al-select-input {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 13px 36px 13px 42px;
+  font-size: 14px; font-family: 'Poppins', sans-serif;
+  color: #e2e8f0;
+  outline: none;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.al-select-input:focus {
+  border-color: rgba(37,99,235,.6);
+  background: rgba(37,99,235,.06);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12), 0 0 20px rgba(37,99,235,.08);
+}
+.al-select-input option {
+  background: #060e23;
+  color: #e2e8f0;
+}
+.al-select-input option:disabled {
+  color: #475569;
+}
+.al-select-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #334155;
+  font-size: 10px;
+  pointer-events: none;
+  transition: color .2s;
+}
+.al-input-wrap:focus-within .al-select-arrow {
+  color: #3b82f6;
+}
+
 /* Animated bottom line on focus */
 .al-line {
   position: absolute;

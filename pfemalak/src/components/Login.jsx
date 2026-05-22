@@ -64,12 +64,12 @@ const Login = ({ onBack, onSignup, onLoginSuccess, lang = 'FR' }) => {
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(false);
+    setError(null);
     setLoading(true);
 
     try {
@@ -82,7 +82,14 @@ const Login = ({ onBack, onSignup, onLoginSuccess, lang = 'FR' }) => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(true);
+        setError('default');
+        setLoading(false);
+        return;
+      }
+
+      // Block admin role from public login page
+      if (data.user?.role === 'admin') {
+        setError('admin_blocked');
         setLoading(false);
         return;
       }
@@ -94,7 +101,7 @@ const Login = ({ onBack, onSignup, onLoginSuccess, lang = 'FR' }) => {
         if (onLoginSuccess) onLoginSuccess(data.user);
       }, 800);
     } catch {
-      setError(true);
+      setError('default');
       setLoading(false);
     }
   };
@@ -177,7 +184,14 @@ const Login = ({ onBack, onSignup, onLoginSuccess, lang = 'FR' }) => {
               </button>
             </form>
 
-            <div className={`alert ${error ? 'show' : ''}`}>{t.error}</div>
+            <div className={`alert ${error ? 'show' : ''}`}>
+              {error === 'admin_blocked'
+                ? (lang === 'FR'
+                    ? "⚠ Accès refusé. Les administrateurs doivent se connecter sur le portail d'administration dédié."
+                    : "⚠ Access denied. Administrators must connect via the dedicated admin portal.")
+                : t.error
+              }
+            </div>
             <div className="signup-row">{t.noAccount} <a href="#" onClick={(e) => { e.preventDefault(); onSignup && onSignup(); }}>{t.create}</a></div>
           </div>
         </div>

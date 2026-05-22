@@ -75,13 +75,22 @@ const AdminLogin = ({ onLoginSuccess }) => {
           <form onSubmit={handleLogin} className="al-form">
 
             <div className="al-field" style={{ '--d': '0.1s' }}>
-              <label>Adresse e-mail</label>
+              <label>Profil Administrateur</label>
               <div className="al-input-wrap">
                 <svg className="al-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <input type="email" placeholder="admin@parlak.com" value={email}
-                  onChange={e => setEmail(e.target.value)} required autoComplete="username" />
+                <select
+                  className="al-select-input"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>Choisir un administrateur...</option>
+                  <option value="malak.tamrani@parlak.ma">Malak Tamrani</option>
+                  <option value="fatimazahra.hofr@parlak.ma">Fatima Zahra Hofr</option>
+                </select>
+                <span className="al-select-arrow">▼</span>
                 <div className="al-line" />
               </div>
             </div>
