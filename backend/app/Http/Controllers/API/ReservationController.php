@@ -53,6 +53,9 @@ class ReservationController extends Controller
             'exit_time'      => 'required|string',
             'duration_hours' => 'required|numeric|min:0.25',
             'total_price'    => 'required|numeric|min:0',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'final_price'    => 'nullable|numeric|min:0',
+            'promo_code_id'  => 'nullable|exists:promo_codes,id',
         ]);
 
         // Verify vehicle belongs to user
@@ -91,6 +94,9 @@ class ReservationController extends Controller
             'exit_time'      => $data['exit_time'],
             'duration_hours' => $data['duration_hours'],
             'total_price'    => $data['total_price'],
+            'discount_amount' => $data['discount_amount'] ?? null,
+            'final_price'    => $data['final_price'] ?? null,
+            'promo_code_id'  => $data['promo_code_id'] ?? null,
             'status'         => 'upcoming',
             'qr_token'       => Str::uuid(),
         ]);

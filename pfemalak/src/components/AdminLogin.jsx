@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { Shield, Key, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import './AdminLogin.css';
 
 const AdminLogin = ({ onLoginSuccess }) => {
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const [twofa, setTwofa]       = useState('');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState(false);
@@ -12,20 +12,30 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!email) return;
     setError(false);
     setLoading(true);
+
     try {
-      const res  = await fetch('http://localhost:8000/api/auth/login', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (!res.ok || data.user?.role !== 'admin') { setError(true); setLoading(false); return; }
+      if (!res.ok || data.user?.role !== 'admin') { 
+        setError(true); 
+        setLoading(false); 
+        return; 
+      }
+      
       localStorage.setItem('parlak_token', data.token);
       setLoading(false);
       setSuccess(true);
-      setTimeout(() => { if (onLoginSuccess) onLoginSuccess(data.user); }, 1000);
+      
+      setTimeout(() => { 
+        if (onLoginSuccess) onLoginSuccess(data.user); 
+      }, 1000);
     } catch {
       setError(true);
       setLoading(false);
@@ -33,135 +43,115 @@ const AdminLogin = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className={`al-page ${success ? 'al-success-state' : ''}`}>
+    <div className={`al-page-wrapper ${success ? 'al-success-mode' : ''}`}>
+      
+      {/* Premium ambient backdrop glow */}
+      <div className="al-ambient-glow" />
+      <div className="al-grid-overlay" />
 
-      {/* ── Animated background ── */}
-      <div className="al-grid" />
-      <div className="al-orb al-orb1" />
-      <div className="al-orb al-orb2" />
-      <div className="al-orb al-orb3" />
-      {[...Array(20)].map((_, i) => (
-        <div key={i} className="al-particle" style={{ '--i': i }} />
-      ))}
-
-      {/* ── Card ── */}
-      <div className="al-card">
-        <div className="al-scanline" />
-
-        {/* Header */}
-        <div className="al-header">
-          <div className={`al-icon-ring ${success ? 'al-ring-success' : ''}`}>
-            <div className="al-ring r1" />
-            <div className="al-ring r2" />
-            <div className="al-icon-core">
-              {success
-                ? <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              }
-            </div>
+      <div className="al-card-container">
+        
+        {/* Sleek logo/icon badge */}
+        <div className="al-badge-logo">
+          <div className="al-badge-inner">
+            <Shield className={`al-shield-icon ${success ? 'pulse' : ''}`} size={28} />
           </div>
-
-          <div className="al-badge">RESTRICTED ACCESS</div>
-          <h1 className="al-title">
-            {success ? 'Accès Accordé' : 'Espace Admin'}
-          </h1>
-          <p className="al-sub">
-            {success ? 'Redirection en cours…' : 'Panneau de contrôle ParLak'}
-          </p>
         </div>
 
-        {/* Form */}
-        {!success && (
-          <form onSubmit={handleLogin} className="al-form">
+        <h1 className="al-main-title">
+          {success ? 'Accès Autorisé' : 'Espace Administrateur'}
+        </h1>
+        <p className="al-main-subtitle">
+          {success ? 'Chargement de votre console...' : 'Système de gestion globale de ParLak'}
+        </p>
 
-            <div className="al-field" style={{ '--d': '0.1s' }}>
-              <label>Profil Administrateur</label>
-              <div className="al-input-wrap">
-                <svg className="al-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+        {!success && (
+          <form onSubmit={handleLogin} className="al-glass-form">
+            
+            {/* Admin Select Input */}
+            <div className="al-input-group">
+              <label className="al-label">Identité Admin</label>
+              <div className="al-input-field-wrapper">
+                <Shield className="al-input-icon" size={18} />
                 <select
-                  className="al-select-input"
+                  className="al-select-element"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Choisir un administrateur...</option>
+                  <option value="" disabled>Sélectionnez votre compte...</option>
                   <option value="malak.tamrani@parlak.ma">Malak Tamrani</option>
                   <option value="fatimazahra.hofr@parlak.ma">Fatima Zahra Hofr</option>
                 </select>
-                <span className="al-select-arrow">▼</span>
-                <div className="al-line" />
+                <div className="al-select-arrow-custom">▼</div>
               </div>
             </div>
 
-            <div className="al-field" style={{ '--d': '0.2s' }}>
-              <label>Mot de passe</label>
-              <div className="al-input-wrap">
-                <svg className="al-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                </svg>
-                <input type={showPass ? 'text' : 'password'} placeholder="••••••••••"
-                  value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" />
-                <button type="button" className="al-eye" onClick={() => setShowPass(!showPass)}>
-                  {showPass
-                    ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
-                    : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                  }
-                </button>
-                <div className="al-line" />
-              </div>
-            </div>
-
-            <div className="al-field" style={{ '--d': '0.3s' }}>
-              <label>Code 2FA</label>
-              <div className="al-otp-wrap">
-                {[0,1,2,3,4,5].map(i => (
-                  <div key={i} className="al-otp-slot">
-                    <span>{twofa[i] || ''}</span>
-                    {twofa.length === i && <div className="al-otp-cursor" />}
-                  </div>
-                ))}
+            {/* Password Input */}
+            <div className="al-input-group">
+              <label className="al-label">Clé d'Accès</label>
+              <div className="al-input-field-wrapper">
+                <Key className="al-input-icon" size={18} />
                 <input
-                  className="al-otp-hidden"
-                  type="text" maxLength="6" value={twofa}
-                  onChange={e => setTwofa(e.target.value.replace(/\D/g, ''))}
-                  autoComplete="one-time-code"
+                  type={showPass ? 'text' : 'password'}
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="al-input-element"
                 />
+                <button
+                  type="button"
+                  className="al-toggle-password-btn"
+                  onClick={() => setShowPass(!showPass)}
+                  aria-label="Afficher le mot de passe"
+                >
+                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
+            {/* Error Message */}
             {error && (
-              <div className="al-error">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Identifiants incorrects ou accès refusé
+              <div className="al-error-alert animate-shake">
+                <div className="al-error-dot" />
+                <span>Clé d'accès incorrecte. Veuillez réessayer.</span>
               </div>
             )}
 
-            <button type="submit" className={`al-btn ${loading ? 'al-btn--loading' : ''}`} disabled={loading}>
-              <div className="al-btn-bg" />
-              <span className="al-btn-text">
-                {loading
-                  ? <><span className="al-dot"/><span className="al-dot"/><span className="al-dot"/></>
-                  : 'ACCÉDER AU PANNEAU'
-                }
-              </span>
-              <div className="al-btn-shine" />
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              className={`al-submit-action-btn ${loading ? 'btn-loading' : ''}`}
+              disabled={loading || !email}
+            >
+              {loading ? (
+                <span className="btn-content-loading">
+                  <Loader2 className="spinner-icon animate-spin" size={18} />
+                  Vérification...
+                </span>
+              ) : (
+                'INITIALISER LA SESSION'
+              )}
             </button>
           </form>
         )}
 
-        {/* Footer */}
-        <div className="al-footer">
-          <div className="al-divider">
-            <span>ParLak</span>
-            <span className="al-dot-sep">·</span>
-            <span>Système Sécurisé</span>
-            <span className="al-dot-sep">·</span>
-            <span>v2.0</span>
-          </div>
-          <a className="al-back" href="/" onClick={e => { e.preventDefault(); window.location.hash = ''; window.location.reload(); }}>
-            ← Retour au site public
+        {/* Minimal Footer */}
+        <div className="al-footer-section">
+          <div className="al-divider-line" />
+          <a
+            href="/"
+            className="al-back-to-public-link"
+            onClick={e => {
+              e.preventDefault();
+              window.location.hash = '';
+              window.location.reload();
+            }}
+          >
+            <ArrowLeft size={14} style={{ marginRight: '6px' }} />
+            Retour au site public
           </a>
         </div>
       </div>

@@ -49,7 +49,7 @@ const Footer = ({ lang = 'FR' }) => {
     if (!email) return;
     setStatus('loading');
     try {
-      const res = await fetch('http://localhost:8000/api/newsletter/subscribe', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'}/newsletter/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

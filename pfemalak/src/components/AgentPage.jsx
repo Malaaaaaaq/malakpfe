@@ -6,11 +6,12 @@ import {
 } from 'lucide-react';
 import './AgentPage.css';
 
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 const apiFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem('parlak_token');
   const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', ...options.headers };
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(`http://localhost:8000/api${endpoint}`, { ...options, headers });
+  const res = await fetch(`${API}${endpoint}`, { ...options, headers });
   if (res.status === 401) window.location.reload();
   return res.json();
 };

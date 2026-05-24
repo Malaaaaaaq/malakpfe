@@ -55,7 +55,7 @@ const ParkingResults = ({ lang = 'FR' }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/parkings')
+    fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'}/parkings`)
       .then(res => res.json())
       .then(data => {
         const formattedData = data.map(p => ({

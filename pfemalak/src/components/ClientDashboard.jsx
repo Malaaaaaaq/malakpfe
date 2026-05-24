@@ -165,6 +165,12 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
   const [dbParkings, setDbParkings] = useState([]);
   const [dynamicZones, setDynamicZones] = useState([]);
   const [zonesLoading, setZonesLoading] = useState(false);
+
+  /* ── Promo code state ── */
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoError, setPromoError] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
   const qrRef = useRef(null);
 
   const handleDownloadQR = () => {
@@ -289,7 +295,13 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
   const spotPrice = selectedSpot ? selectedSpot.price : (form.types.includes('vip') ? 15 : 8);
   const subtotal = spotPrice * hours;
   const tva = +(subtotal * 0.1).toFixed(2);
-  const total = +(subtotal + tva).toFixed(2);
+  const totalBeforeDiscount = +(subtotal + tva).toFixed(2);
+  const discountAmount = appliedPromo
+    ? (appliedPromo.type === 'percent'
+      ? +(totalBeforeDiscount * (appliedPromo.discount / 100)).toFixed(2)
+      : Math.min(appliedPromo.discount, totalBeforeDiscount))
+    : 0;
+  const total = +(totalBeforeDiscount - discountAmount).toFixed(2);
   const zoneSpots = dynamicZones.find(z => z.name === form.zone)?.spots || [];
   const libreCount = zoneSpots.filter(s => s.status === 'libre').length;
   const totalCount = zoneSpots.length;
@@ -374,21 +386,26 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
     if (!selectedSpot) return;
     if (!selectedVehicle) { alert('Veuillez sélectionner un véhicule.'); return; }
 
+    const body = {
+      vehicle_id: selectedVehicle,
+      spot_code: selectedSpot.id,
+      parking_name: selectedParking?.name || 'Parking',
+      parking_id: selectedParking?.id,
+      city_name: form.city,
+      entry_date: (() => { const [d, m, y] = form.date.split('/'); return `${y}-${m}-${d}`; })(),
+      entry_time: form.time,
+      exit_time: exitTime,
+      duration_hours: hours,
+      total_price: totalBeforeDiscount,
+      discount_amount: discountAmount,
+      final_price: total,
+      promo_code_id: appliedPromo?.id || null,
+      payment_method: paymentMethod,
+    };
+
     const data = await apiFetch('/reservations', {
       method: 'POST',
-      body: JSON.stringify({
-        vehicle_id: selectedVehicle,
-        spot_code: selectedSpot.id,
-        parking_name: selectedParking?.name || 'Parking',
-        parking_id: selectedParking?.id,
-        city_name: form.city,
-        entry_date: (() => { const [d, m, y] = form.date.split('/'); return `${y}-${m}-${d}`; })(),
-        entry_time: form.time,
-        exit_time: exitTime,
-        duration_hours: hours,
-        total_price: total,
-        payment_method: paymentMethod,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (data.reference) {
@@ -905,12 +922,74 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
             })()}
           </div>
 
+          {/* Promo Code */}
+          <div className="recap-section-title">CODE PROMO</div>
+          <div className="recap-promo-section" style={{ marginBottom: '1rem' }}>
+            {!appliedPromo ? (
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  placeholder="Saisir un code promo"
+                  value={promoCodeInput}
+                  onChange={(e) => { setPromoCodeInput(e.target.value.toUpperCase()); setPromoError(''); }}
+                  style={{ flex: 1, padding: '8px 10px', border: promoError ? '1px solid #ef4444' : '1px solid #cbd5e1', borderRadius: '6px', fontSize: '0.82rem', textTransform: 'uppercase' }}
+                />
+                <button
+                  className="btn-primary small"
+                  disabled={!promoCodeInput || promoLoading}
+                  onClick={async () => {
+                    setPromoLoading(true);
+                    setPromoError('');
+                    try {
+                      const res = await apiFetch('/promo/validate', {
+                        method: 'POST',
+                        body: JSON.stringify({ code: promoCodeInput, amount: totalBeforeDiscount }),
+                      });
+                      if (res?.promo) {
+                        setAppliedPromo(res.promo);
+                        setPromoCodeInput('');
+                      } else {
+                        setPromoError(res?.message || 'Code invalide');
+                      }
+                    } catch { setPromoError('Erreur de vérification'); }
+                    finally { setPromoLoading(false); }
+                  }}
+                  style={{ padding: '8px 12px', whiteSpace: 'nowrap', fontSize: '0.8rem' }}
+                >
+                  {promoLoading ? '...' : 'Appliquer'}
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '6px' }}>
+                <div>
+                  <span style={{ fontWeight: 700, color: '#059669', fontSize: '0.82rem' }}>{appliedPromo.code}</span>
+                  <span style={{ marginLeft: 8, fontSize: '0.78rem', color: '#047857' }}>
+                    -{appliedPromo.type === 'percent' ? `${appliedPromo.discount}%` : `${appliedPromo.discount} MAD`}
+                  </span>
+                </div>
+                <button
+                  style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}
+                  onClick={() => { setAppliedPromo(null); setPromoError(''); }}
+                >
+                  Retirer
+                </button>
+              </div>
+            )}
+            {promoError && <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: 4 }}>{promoError}</p>}
+          </div>
+
           {/* Pricing */}
           <div className="recap-pricing">
             <div className="price-row"><span>Tarif horaire</span><span>{spotPrice} MAD/h</span></div>
             <div className="price-row"><span>Durée</span><span>{hours}h</span></div>
             <div className="price-row"><span>Sous-total</span><span>{subtotal} MAD</span></div>
             <div className="price-row"><span>TVA (10%)</span><span>{tva} MAD</span></div>
+            {discountAmount > 0 && (
+              <div className="price-row" style={{ color: '#059669' }}>
+                <span>Réduction promo</span>
+                <span>-{discountAmount.toFixed(2)} MAD</span>
+              </div>
+            )}
             <div className="price-row total-row"><span>Total</span><strong className="text-blue">{total} MAD</strong></div>
           </div>
 
