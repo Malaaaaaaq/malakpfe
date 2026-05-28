@@ -44,7 +44,7 @@ const QRCodeSVG = () => (
 /* ════════════════════════════════════════════════
    API HELPER
 ════════════════════════════════════════════════ */
-const API = 'http://localhost:8000/api';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   'Accept': 'application/json',
@@ -210,6 +210,8 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
   const [showAddVehicle, setShowAddVehicle] = useState(false);
   const [noVehicleAlert, setNoVehicleAlert] = useState(false);
   const [newVehicle, setNewVehicle] = useState({ plate: '', make: '', model: '', color: '', type: 'Berline' });
+  const [editingVehicle, setEditingVehicle] = useState(null);
+  const [editForm, setEditForm] = useState({ plate: '', make: '', model: '', color: '', type: 'Berline' });
 
   /* ── Reservations state ── */
   const [reservations, setReservations] = useState([]);
@@ -382,6 +384,23 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
     if (selectedVehicle === id) setSelectedVehicle(updated[0]?.id || null);
   };
 
+  const handleEditVehicleClick = (v) => {
+    setEditForm({ plate: v.plate, make: v.make, model: v.model, color: v.color || '', type: v.type || 'Berline' });
+    setEditingVehicle(v);
+  };
+
+  const handleUpdateVehicle = async () => {
+    if (!editingVehicle) return;
+    const data = await apiFetch(`/vehicles/${editingVehicle.id}`, {
+      method: 'PUT',
+      body: JSON.stringify(editForm),
+    });
+    if (data.id) {
+      setVehicles(vehicles.map(v => v.id === data.id ? data : v));
+      setEditingVehicle(null);
+    }
+  };
+
   const handleConfirm = async () => {
     if (!selectedSpot) return;
     if (!selectedVehicle) { alert('Veuillez sélectionner un véhicule.'); return; }
@@ -485,7 +504,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
       </nav>
 
       {/* Logout */}
-      <button className="sb-logout" onClick={onLogout}>
+      <button className="sb-logout" onClick={() => { if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) onLogout(); }}>
         <LogOut size={17} /> Déconnexion
       </button>
     </aside>
@@ -1254,7 +1273,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
                   </div>
                 </div>
                 <div className="vehicle-actions">
-                  <button className="icon-btn"><Edit size={14} /></button>
+                  <button className="icon-btn" onClick={() => handleEditVehicleClick(v)}><Edit size={14} /></button>
                   <button className="icon-btn red" onClick={() => handleDeleteVehicle(v.id)}><Trash2 size={14} /></button>
                 </div>
               </div>
@@ -1280,9 +1299,25 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const handleSave = () => {
-      setIsEditing(false);
-      // Optional: Simulate API update here if needed
+    const handleSave = async () => {
+      try {
+        const payload = {
+          firstname: formData.firstName,
+          lastname: formData.lastName,
+          phone: formData.phone,
+        };
+        const res = await apiFetch('/profile', {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+        });
+        if (res?.id) {
+          setIsEditing(false);
+        } else {
+          alert(res?.message || 'Erreur lors de la mise à jour du profil.');
+        }
+      } catch {
+        alert('Erreur de connexion.');
+      }
     };
 
     const displayFirst = formData.firstName || 'Utilisateur';
@@ -1406,6 +1441,62 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
             disabled={!newVehicle.plate || !newVehicle.make || !newVehicle.model}
           >
             <Check size={15} /> Enregistrer le véhicule
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ══════════════════════════════════════════
+     MODAL: MODIFIER UN VÉHICULE
+  ══════════════════════════════════════════ */
+  const EditVehicleModal = () => (
+    <div className="modal-overlay" onClick={() => setEditingVehicle(null)}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3><Car size={18} /> Modifier le véhicule</h3>
+          <button className="modal-close" onClick={() => setEditingVehicle(null)}><X size={18} /></button>
+        </div>
+        <div className="modal-body">
+          <div className="form-grid-2">
+            <div className="field-group full">
+              <label>Immatriculation <span className="required">*</span></label>
+              <input placeholder="Ex: 12345-A-1" value={editForm.plate}
+                onChange={e => setEditForm(f => ({ ...f, plate: e.target.value }))} />
+            </div>
+            <div className="field-group">
+              <label>Marque <span className="required">*</span></label>
+              <input placeholder="Ex: Toyota, Dacia…" value={editForm.make}
+                onChange={e => setEditForm(f => ({ ...f, make: e.target.value }))} />
+            </div>
+            <div className="field-group">
+              <label>Modèle <span className="required">*</span></label>
+              <input placeholder="Ex: Corolla, Logan…" value={editForm.model}
+                onChange={e => setEditForm(f => ({ ...f, model: e.target.value }))} />
+            </div>
+            <div className="field-group">
+              <label>Couleur</label>
+              <input placeholder="Ex: Blanc, Gris…" value={editForm.color}
+                onChange={e => setEditForm(f => ({ ...f, color: e.target.value }))} />
+            </div>
+            <div className="field-group">
+              <label>Type</label>
+              <div className="select-wrap">
+                <select value={editForm.type} onChange={e => setEditForm(f => ({ ...f, type: e.target.value }))}>
+                  {['Berline', 'SUV', 'Citadine', 'Utilitaire', 'Break', 'Moto'].map(t => <option key={t}>{t}</option>)}
+                </select>
+                <ChevronDown size={13} className="select-arrow" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal-footer">
+          <button className="btn-ghost" onClick={() => setEditingVehicle(null)}>Annuler</button>
+          <button className="btn-primary"
+            onClick={handleUpdateVehicle}
+            disabled={!editForm.plate || !editForm.make || !editForm.model}
+          >
+            <Check size={15} /> Enregistrer les modifications
           </button>
         </div>
       </div>
@@ -1744,6 +1835,7 @@ const ClientDashboard = ({ user, lang = 'FR', onLogout, onNavigate }) => {
       </div>
 
       {showAddVehicle && <AddVehicleModal />}
+      {editingVehicle && <EditVehicleModal />}
 
       {/* ── Modal QR Code ── */}
       {qrModal && (

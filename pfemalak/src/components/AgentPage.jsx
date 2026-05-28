@@ -212,7 +212,7 @@ const AgentPage = ({ user, onLogout }) => {
         <div className="agent-card">
           <div className="card-header">
             <h3>Réservations Récentes</h3>
-            <button className="btn-text">Voir tout</button>
+            <button className="btn-text" onClick={() => setActivePage('reservations')}>Voir tout</button>
           </div>
           <div className="simple-table">
             <div className="table-row header">
@@ -587,8 +587,8 @@ const AgentPage = ({ user, onLogout }) => {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="nav-item logout" onClick={onLogout}>
-            <LogOut size={20} />
+          <button className="nav-item logout" onClick={() => { if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) onLogout(); }}>
+            <LogOut size={17}/>
             <span>Déconnexion</span>
           </button>
         </div>
@@ -626,7 +626,6 @@ const AgentPage = ({ user, onLogout }) => {
               <div className="page-header">
                 <h2>Gestion des Réservations</h2>
                 <div className="header-actions">
-                  <button className="btn-secondary"><Filter size={16}/> Filtrer</button>
                   <button className="btn-primary" onClick={fetchAgentData}><Clock size={16}/> Rafraîchir</button>
                 </div>
               </div>

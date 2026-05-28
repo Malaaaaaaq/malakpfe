@@ -134,7 +134,7 @@ const AdminPage = ({ user, onLogout }) => {
       const token = localStorage.getItem('parlak_token');
       const res = await fetch(`${API}/admin/reservations/export${query}`, {
         headers: {
-          'Accept': 'text/csv',
+          'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           'Authorization': token ? `Bearer ${token}` : undefined,
         },
       });
@@ -155,7 +155,7 @@ const AdminPage = ({ user, onLogout }) => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `reservations-${resFromDate || 'all'}-${resToDate || 'all'}.csv`;
+      a.download = `reservations-${resFromDate || 'all'}-${resToDate || 'all'}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -1121,7 +1121,7 @@ const AdminPage = ({ user, onLogout }) => {
         </nav>
 
         <div className="adm-sidebar-footer">
-          <button className="adm-logout-btn" onClick={onLogout}>
+          <button className="adm-logout-btn" onClick={() => { if (window.confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) onLogout(); }}>
             <LogOut size={17} />
             <span>Déconnexion</span>
           </button>

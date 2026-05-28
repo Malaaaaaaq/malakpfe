@@ -28,6 +28,25 @@ class VehicleController extends Controller
         return response()->json($vehicle, 201);
     }
 
+    public function update(Request $request, Vehicle $vehicle)
+    {
+        if ($vehicle->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Non autorisé.'], 403);
+        }
+
+        $data = $request->validate([
+            'plate' => 'required|string|max:20',
+            'make'  => 'required|string|max:50',
+            'model' => 'required|string|max:50',
+            'color' => 'nullable|string|max:30',
+            'type'  => 'nullable|string|max:30',
+        ]);
+
+        $vehicle->update($data);
+
+        return response()->json($vehicle);
+    }
+
     public function destroy(Request $request, Vehicle $vehicle)
     {
         if ($vehicle->user_id !== $request->user()->id) {

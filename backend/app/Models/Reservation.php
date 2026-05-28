@@ -11,7 +11,7 @@ class Reservation extends Model
         'spot_code', 'parking_name', 'city_name',
         'entry_date', 'entry_time', 'exit_time',
         'duration_hours', 'total_price', 'status', 'qr_token',
-        'promo_code_id', 'discount_amount', 'final_price',
+        'promo_code_id', 'discount_amount', 'final_price', 'payment_method',
     ];
 
     protected function casts(): array

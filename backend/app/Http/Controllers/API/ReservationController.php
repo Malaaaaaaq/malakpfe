@@ -56,6 +56,7 @@ class ReservationController extends Controller
             'discount_amount' => 'nullable|numeric|min:0',
             'final_price'    => 'nullable|numeric|min:0',
             'promo_code_id'  => 'nullable|exists:promo_codes,id',
+            'payment_method' => 'nullable|string|max:50',
         ]);
 
         // Verify vehicle belongs to user

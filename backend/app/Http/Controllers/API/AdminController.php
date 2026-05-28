@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AdminController extends Controller
 {
@@ -452,41 +454,61 @@ class AdminController extends Controller
         }
 
         $reservations = $query->get();
-        $filename = 'reservations_' . now()->format('Ymd_His') . '.csv';
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Réservations');
 
         $headers = [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'A' => 'Référence',
+            'B' => 'Client',
+            'C' => 'Email',
+            'D' => 'Parking',
+            'E' => 'Place',
+            'F' => 'Véhicule',
+            'G' => 'Date entrée',
+            'H' => 'Heure entrée',
+            'I' => 'Heure sortie',
+            'J' => 'Prix total',
+            'K' => 'Statut',
         ];
 
-        $callback = function () use ($reservations) {
-            $output = fopen('php://output', 'w');
-            fputs($output, "\xEF\xBB\xBF");
-            fputcsv($output, [
-                'Référence', 'Client', 'Email', 'Parking', 'Place',
-                'Véhicule', 'Date entrée', 'Heure entrée', 'Heure sortie',
-                'Prix total', 'Statut'
-            ]);
+        foreach ($headers as $col => $label) {
+            $sheet->setCellValue($col . '1', $label);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+        }
 
-            foreach ($reservations as $r) {
-                fputcsv($output, [
-                    $r->reference ?: "PRK-{$r->id}",
-                    $r->user ? "{$r->user->firstname} {$r->user->lastname}" : 'Client Inconnu',
-                    $r->user ? $r->user->email : 'N/A',
-                    $r->parking_name ?: ($r->spot && $r->spot->zone && $r->spot->zone->parking ? $r->spot->zone->parking->name : 'N/A'),
-                    $r->spot_code,
-                    $r->vehicle ? "{$r->vehicle->plate} ({$r->vehicle->make} {$r->vehicle->model})" : '—',
-                    $r->entry_date ? $r->entry_date->format('Y-m-d') : 'N/A',
-                    $r->entry_time,
-                    $r->exit_time,
-                    $r->total_price,
-                    $r->status,
-                ]);
-            }
-            fclose($output);
-        };
+        $row = 2;
+        foreach ($reservations as $r) {
+            $sheet->setCellValue('A' . $row, $r->reference ?: "PRK-{$r->id}");
+            $sheet->setCellValue('B' . $row, $r->user ? "{$r->user->firstname} {$r->user->lastname}" : 'Client Inconnu');
+            $sheet->setCellValue('C' . $row, $r->user ? $r->user->email : 'N/A');
+            $sheet->setCellValue('D' . $row, $r->parking_name ?: ($r->spot && $r->spot->zone && $r->spot->zone->parking ? $r->spot->zone->parking->name : 'N/A'));
+            $sheet->setCellValue('E' . $row, $r->spot_code);
+            $sheet->setCellValue('F' . $row, $r->vehicle ? "{$r->vehicle->plate} ({$r->vehicle->make} {$r->vehicle->model})" : '—');
+            $sheet->setCellValue('G' . $row, $r->entry_date ? $r->entry_date->format('Y-m-d') : 'N/A');
+            $sheet->setCellValue('H' . $row, $r->entry_time);
+            $sheet->setCellValue('I' . $row, $r->exit_time);
+            $sheet->setCellValue('J' . $row, $r->total_price);
+            $sheet->setCellValue('K' . $row, $r->status);
+            $row++;
+        }
 
-        return response()->stream($callback, 200, $headers);
+        foreach (array_keys($headers) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $filename = 'reservations_' . now()->format('Ymd_His') . '.xlsx';
+
+        $writer = new Xlsx($spreadsheet);
+        ob_start();
+        $writer->save('php://output');
+        $content = ob_get_clean();
+
+        return response($content, 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     /**

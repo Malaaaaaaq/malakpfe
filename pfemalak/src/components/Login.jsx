@@ -175,7 +175,7 @@ const Login = ({ onBack, onSignup, onLoginSuccess, lang = 'FR' }) => {
 
 <div className="row-extra">
                 <label className="remember"><input type="checkbox"/> {t.remember}</label>
-                <a href="#" className="forgot">{t.forgot}</a>
+                <a href="#" className="forgot" onClick={(e) => { e.preventDefault(); alert('Contactez le support à support@parlak.ma pour réinitialiser votre mot de passe.'); }}>{t.forgot}</a>
               </div>
 
               <button type="submit" className={`btn-submit ${loading ? 'loading' : ''}`} style={success ? { background: '#10b981' } : {}} disabled={loading}>

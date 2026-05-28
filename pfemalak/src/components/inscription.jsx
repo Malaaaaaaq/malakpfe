@@ -1,5 +1,5 @@
 // src/components/Inscription.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Inscription.css';
 import AgentLocationModal from './AgentLocationModal.jsx';
 import Lottie from 'lottie-react';
@@ -8,6 +8,7 @@ import bgAnimationData from '../animations/anim.json';
 
 const Inscription = ({ onLogin }) => {
   const [selectedRole, setSelectedRole] = useState('client');
+  const [cities, setCities] = useState([]);
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -19,9 +20,21 @@ const Inscription = ({ onLogin }) => {
     latitude: '',
     longitude: '',
     parking_name: '',
-    city_id: '1', // Default
+    city_id: '',
     total_spots: '40',
   });
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/cities')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCities(data);
+          setFormData(prev => ({ ...prev, city_id: String(data[0].id) }));
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -369,11 +382,17 @@ const Inscription = ({ onLogin }) => {
                     onChange={handleInputChange}
                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', marginBottom: '1rem' }}
                   >
-                    <option value="1">Casablanca</option>
-                    <option value="2">Rabat</option>
-                    <option value="3">Marrakech</option>
-                    <option value="4">Tanger</option>
-                    <option value="5">Agadir</option>
+                    {cities.length > 0 ? cities.map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    )) : (
+                      <>
+                        <option value="1">Casablanca</option>
+                        <option value="2">Rabat</option>
+                        <option value="3">Marrakech</option>
+                        <option value="4">Tanger</option>
+                        <option value="5">Agadir</option>
+                      </>
+                    )}
                   </select>
                 </div>
 

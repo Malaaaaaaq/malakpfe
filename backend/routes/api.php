@@ -34,6 +34,11 @@ Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request
     return response()->json(['message' => 'Email envoyé avec succès !']);
 });
 
+// ── Villes (publiques) ────────────────────────────────────────
+Route::get('/cities', function () {
+    return response()->json(\App\Models\City::all());
+});
+
 // ── Auth (public) ──────────────────────────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -54,9 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile',  [UserController::class, 'update']);
 
     // Véhicules
-    Route::get('/vehicles',        [VehicleController::class, 'index']);
-    Route::post('/vehicles',       [VehicleController::class, 'store']);
-    Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy']);
+    Route::get('/vehicles',             [VehicleController::class, 'index']);
+    Route::post('/vehicles',            [VehicleController::class, 'store']);
+    Route::put('/vehicles/{vehicle}',   [VehicleController::class, 'update']);
+    Route::delete('/vehicles/{vehicle}',[VehicleController::class, 'destroy']);
 
     // Réservations
     Route::get('/reservations',                  [ReservationController::class, 'index']);
